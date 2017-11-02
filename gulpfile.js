@@ -11,7 +11,7 @@ let gulpPaths = {
     "bc": "./bower_components/",
     "js": "./src/js/",
     "sass": "./src/scss/",
-    "dist": "./dist/",
+    "build": "./build/",
     "views": "./src/views/",
     "img": "./src/img/",
     "fonts": "./src/fonts/"
@@ -23,10 +23,10 @@ let app = function () {
     ])
     .pipe(strip())
     .pipe(concat('index.js'))
-    .pipe(gulp.dest(gulpPaths.dist + 'js'))
+    .pipe(gulp.dest(gulpPaths.build + 'js'))
     .pipe(uglify())
     .pipe(rename('index.min.js'))
-    .pipe(gulp.dest(gulpPaths.dist + 'js'));
+    .pipe(gulp.dest(gulpPaths.build + 'js'));
 };
 
 let vendor = function () {
@@ -37,10 +37,10 @@ let vendor = function () {
     ])
     .pipe(strip())
     .pipe(concat('vendor.js'))
-    .pipe(gulp.dest(gulpPaths.dist + 'js'))
+    .pipe(gulp.dest(gulpPaths.build + 'js'))
     .pipe(uglify())
     .pipe(rename('vendor.min.js'))
-    .pipe(gulp.dest(gulpPaths.dist + 'js'));
+    .pipe(gulp.dest(gulpPaths.build + 'js'));
 };
 
 let style = function () {
@@ -48,10 +48,10 @@ let style = function () {
         // Add css files from bower here
     ])
     .pipe(concat('vendor.css'))
-    .pipe(gulp.dest(gulpPaths.dist+'css'))
+    .pipe(gulp.dest(gulpPaths.build+'css'))
     .pipe(plumber())
     .pipe(rename('vendor.min.css'))
-    .pipe(gulp.dest(gulpPaths.dist+'css'))
+    .pipe(gulp.dest(gulpPaths.build+'css'))
 };
 
 let sassBuild = function () {
@@ -60,10 +60,10 @@ let sassBuild = function () {
     ])
     .pipe(sass().on('error', sass.logError))
     .pipe(concat('index.css'))
-    .pipe(gulp.dest(gulpPaths.dist+'css'))
+    .pipe(gulp.dest(gulpPaths.build+'css'))
     .pipe(plumber())
     .pipe(rename('index.min.css'))
-    .pipe(gulp.dest(gulpPaths.dist+'css'));
+    .pipe(gulp.dest(gulpPaths.build+'css'));
 };
 
 let viewsBuild = function () {
@@ -71,21 +71,28 @@ let viewsBuild = function () {
         gulpPaths.views + '*'
     ])
     .pipe(strip())
-    .pipe(gulp.dest(gulpPaths.dist+'views'));
+    .pipe(gulp.dest(gulpPaths.build+'views'));
 };
 
 let fonts = function () {
     return gulp.src([
         gulpPaths.fonts + '*'
     ])
-    .pipe(gulp.dest(gulpPaths.dist+'fonts'));
+    .pipe(gulp.dest(gulpPaths.build+'fonts'));
 };
 
 let images = function () {
     return gulp.src([
         gulpPaths.img + '*'
     ])
-    .pipe(gulp.dest(gulpPaths.dist+'img'));
+    .pipe(gulp.dest(gulpPaths.build+'img'));
+};
+
+let index = function () {
+    return gulp.src([
+        './index.html'
+    ])
+    .pipe(gulp.dest(gulpPaths.build));
 };
 
 gulp.task('app', app);
@@ -95,8 +102,9 @@ gulp.task('sass', sassBuild);
 gulp.task('views', viewsBuild);
 gulp.task('fonts', fonts);
 gulp.task('images', images);
+gulp.task('index', index);
 
-gulp.task('default', ['views', 'images', 'fonts', 'style', 'vendor', 'sass', 'app']);
+gulp.task('default', ['views', 'images', 'fonts', 'style', 'vendor', 'sass', 'app', 'index']);
 
 gulp.task('watch', function () {
     gulp.watch(gulpPaths.sass + '*.scss', ['sass']);
