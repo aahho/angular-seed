@@ -32,6 +32,9 @@ let app = function () {
 let vendor = function () {
     return gulp.src([
         // add bower components js here
+        gulpPaths.bc + 'jquery/dist/jquery.min.js',
+        gulpPaths.bc + 'popper.js/dist/umd/popper.min.js',
+        gulpPaths.bc + 'bootstrap/dist/js/bootstrap.min.js',
         gulpPaths.bc + 'angular/angular.min.js',
         gulpPaths.bc + 'angular-ui-router/release/angular-ui-router.min.js'
     ])
@@ -46,10 +49,12 @@ let vendor = function () {
 let style = function () {
     return gulp.src([
         // Add css files from bower here
+        gulpPaths.bc + 'bootstrap/dist/css/bootstrap.min.css',
     ])
     .pipe(concat('vendor.css'))
     .pipe(gulp.dest(gulpPaths.build+'css'))
     .pipe(plumber())
+    .pipe(minifyCSS())
     .pipe(rename('vendor.min.css'))
     .pipe(gulp.dest(gulpPaths.build+'css'))
 };
@@ -104,7 +109,7 @@ gulp.task('fonts', fonts);
 gulp.task('images', images);
 gulp.task('index', index);
 
-gulp.task('default', ['views', 'images', 'fonts', 'style', 'vendor', 'sass', 'app', 'index']);
+gulp.task('default', ['views', 'images', 'fonts', 'style', 'vendor', 'sass', 'app', 'index', 'watch']);
 
 gulp.task('watch', function () {
     gulp.watch(gulpPaths.sass + '*.scss', ['sass']);
