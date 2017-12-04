@@ -1,8 +1,8 @@
 (function (window, angular) {
 
-    var TEMPLATE_URL = "./src/views/";
+    let TEMPLATE_URL = "./src/views/";
 
-    var APP = angular.module('angularSeed', [
+    let APP = angular.module('angularSeed', [
         'ui.router',
         'app.controllers',
         'app.services',
